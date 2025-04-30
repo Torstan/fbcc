@@ -41,14 +41,14 @@ enum {
 
 typedef struct _LIST {
 	 int type;
-	 struct _LIST *tl;
+	 struct _LIST *tl; //上一个list，一个表达式相关的变量和op组成一个列表，按tl找到上一个
 	 union {
-			struct _LIST *list;
-			int val;
-			int buf_size;
-			struct _SYM *sym;
+			struct _LIST *list; //list类型
+			int val;            //int 和 tag类型
+			int buf_size;       //str/buff类型
+			struct _SYM *sym;   //sym类型
 	 } data;
-	 char str[1];
+	 char str[1]; //str后面是string的内容，具体长度在buf_size
 } LIST;
 
 typedef LIST *PLIST;
@@ -121,7 +121,7 @@ typedef struct _BLOCK {
 	 int type;
    int label_break;
 	 int label_continue;
-	 int label_restart;     /* pour le d�but des boucles 'do' et 'for' */
+	 int label_restart;     /* pour le d�but des boucles 'do' et 'for' */
 	 
 	 LIST *switch_values;
 
@@ -133,7 +133,7 @@ typedef struct _BLOCK {
 extern BLOCK *block_global;
 extern BLOCK *block_function; 
 extern BLOCK *block_current;  /* bloc courant */
-extern BLOCK *block_decl;     /* bloc courant pour les d�clarations */
+extern BLOCK *block_decl;     /* bloc courant pour les d�clarations */
 
 void Sym_Init(void);
 void Sym_Print(void);
@@ -171,7 +171,6 @@ void Func_Declare(LIST *spec,LIST *decl,LIST *var_list);
 void Func_End(void);
 
 int Type_Size(LIST *type);
-
 
 LIST *Expr_List(LIST *expr_list);
 LIST *Expr_Binary(int op,LIST *e1,LIST *e2);
@@ -313,11 +312,11 @@ void Lex_AddString(int c);
 int Lex_CharEsc(char *str);
 
 
-/* g�n�ration de code */
+/* generate code, 被fbparse.y生成的函数调用 */
 
 extern int enum_val;
 
-/* num�ro de r�f�rence pour les variables globales */
+/* num�ro de r�f�rence pour les variables globales */
 extern int global_var_num;
 
 /* allocation des variables locales */
